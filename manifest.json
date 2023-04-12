@@ -1,32 +1,23 @@
 {
-  "name": "Minha Extensão",
-  "version": "1.0.0",
   "manifest_version": 3,
-  "description": "Uma descrição para minha extensão",
+  "name": "Screenshot Report Extension",
+  "description": "Captura um screenshot da página atual e exibe os metadados em um relatório.",
+  "version": "1.0.0",
   "icons": {
-    "16": "icons/icon16.png",
-	"32": "icons/icon32.png",
-	"48": "icons/icon48.png",
-    "128": "icons/icon128.png"
+    "16": "icons/screenshot-16.png",
+    "32": "icons/screenshot-32.png",
+    "48": "icons/screenshot-48.png",
+    "128": "icons/screenshot-128.png"
   },
-  "background": {
-    "service_worker": "background.js",
-    "type": "module"
-  },
-  "commands": {
-    "capturar-tela": {
-      "suggested_key": {
-        "default": "Ctrl+Shift+D",
-        "mac": "Command+Shift+D"
-      },
-      "description": "Captura a tela e exibe a prévia do screenshot"
+  "permissions": ["tabs", "storage"],
+  "host_permissions": ["<all_urls>"],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/screenshot-16.png",
+      "32": "icons/screenshot-32.png",
+      "48": "icons/screenshot-48.png",
+      "128": "icons/screenshot-128.png"
     }
-  },
-  "permissions": ["activeTab", "contextMenus", "storage"],
-  "content_scripts": [
-    {
-      "matches": ["<all_urls>"],
-      "js": ["captura.js"]
-    }
-  ]
+  }
 }

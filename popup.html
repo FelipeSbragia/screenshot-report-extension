@@ -1,26 +1,16 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="UTF-8">
-    <title>Captura de Tela e Metadados da Página</title>
-    <script src="popup.js"></script>
-    <style>
-      img {
-        max-width: 100%;
-      }
-      #mensagem {
-        color: green;
-        font-weight: bold;
-      }
-    </style>
+    <title>Screenshot &amp; Report Extension</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="./popup.css" />
   </head>
   <body>
-    <h1>Captura de Tela e Metadados da Página</h1>
-    <button id="botao-capturar">Capturar Tela</button>
-    <div id="preview"></div>
-    <div id="meta-tags">
-      <h2>Metadados da Página</h2>
+    <div class="container">
+      <h1>Screenshot &amp; Report Extension</h1>
+      <button id="capturar-tela">Capturar Tela</button>
+      <div id="metadata"></div>
     </div>
-    <p id="mensagem"></p>
+    <script src="./popup.js"></script>
   </body>
 </html>
