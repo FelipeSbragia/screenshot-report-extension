@@ -39,3 +39,31 @@ document.addEventListener('DOMContentLoaded', function() {
   getReports();
   chrome.storage.onChanged.addListener(getReports);
 });
+
+document.getElementById("capture").addEventListener("click", async () => {
+  const dataUrl = await captureScreen();
+  saveScreenshot(dataUrl);
+  generateReport();
+});
+
+async function captureScreen() {
+  const tab = await getCurrentTab();
+  const dataUrl = await html2canvas(tab);
+  return dataUrl;
+}
+
+function saveScreenshot(dataUrl) {
+  chrome.downloads.download({
+    url: dataUrl,
+    filename: "screenshot.png"
+  });
+}
+
+function generateReport() {
+  const report = {
+    url: window.location.href,
+    title: document.title,
+    date: new Date().toLocaleString()
+  };
+  chrome.runtime.sendMessage({ action: "generateReport", report });
+}

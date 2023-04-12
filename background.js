@@ -36,3 +36,15 @@ chrome.runtime.onMessageExternal.addListener(function (message, sender, sendResp
     return true;
   }
 });
+
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+  if (request.action === "generateReport") {
+    const report = request.report;
+    const content = `URL: ${report.url}\nTitle: ${report.title}\nDate: ${report.date}`;
+    chrome.downloads.download({
+      url: "data:text/plain;charset=utf-8," + encodeURIComponent(content),
+      filename: "report.txt"
+    });
+  }
+});
+
