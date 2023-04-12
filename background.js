@@ -23,7 +23,7 @@ chrome.action.onClicked.addListener(function(tab) {
 });
 
 // Adiciona um ouvinte de eventos para onMessage
-chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
+chrome.runtime.onMessageExternal.addListener(function (message, sender, sendResponse) {
   if (message === 'getTabInfo') {
     chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
       const tab = tabs[0];
