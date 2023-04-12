@@ -18,15 +18,19 @@ async function getMetadata() {
     metaTags: [],
   };
 
-  const metaTags = await chrome.scripting.executeScript({
-    target: { tabId: tab.id },
-    func: () => [...document.getElementsByTagName('meta')],
-  });
+  if (chrome.scripting && chrome.scripting.executeScript) {
+	  const metaTags = await chrome.scripting.executeScript({
+		target: { tabId: tab.id },
+		func: () => [...document.getElementsByTagName('meta')],
+	  });
 
-  metadata.metaTags = metaTags.result.map(({ attributes }) =>
-    [...attributes].reduce((prev, curr) => ({ ...prev, [curr.name]: curr.value }), {})
-  );
-
+	  metadata.metaTags = metaTags.result.map(({ attributes }) =>
+		[...attributes].reduce((prev, curr) => ({ ...prev, [curr.name]: curr.value }), {})
+	  );
+  } else {
+	console.log('API de script do Chrome não está disponível');
+  }
+  
   return metadata;
 }
 
