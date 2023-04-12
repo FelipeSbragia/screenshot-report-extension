@@ -1,38 +1,32 @@
 {
-  "manifest_version": 3,
-  "name": "Screenshot Report Extension",
+  "name": "Minha Extensão",
   "version": "1.0.0",
-  "description": "Tira um screenshot da página atual e gera um relatório",
+  "manifest_version": 3,
+  "description": "Uma descrição para minha extensão",
   "icons": {
     "16": "icons/icon16.png",
 	"32": "icons/icon32.png",
 	"48": "icons/icon48.png",
     "128": "icons/icon128.png"
   },
-  "action": {
-    "default_popup": "popup.html",
-    "default_icon": {
-      "48": "icons/icon48.png"
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "commands": {
+    "capturar-tela": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+D",
+        "mac": "Command+Shift+D"
+      },
+      "description": "Captura a tela e exibe a prévia do screenshot"
     }
   },
-  "permissions": [
-    "activeTab",
-	"tabs",
-    "declarativeContent",
-    "storage",
-    "scripting",
-    "contextMenus",
-    "downloads"
-  ],
-  "background": {
-    "service_worker": "background.js"
-  },
-  "host_permissions": ["<all_urls>"],
-  "content_security_policy": {
-    "extension_pages": "script-src 'self'; object-src 'self'",
-    "sandbox": "sandbox allow-scripts"
-  },
-  "externally_connectable": {
-	"matches": ["*://*/*"]
-  }
+  "permissions": ["activeTab", "contextMenus", "storage"],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["captura.js"]
+    }
+  ]
 }
