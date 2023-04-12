@@ -1,6 +1,6 @@
 // Adiciona um ouvinte de eventos para onClicked
 chrome.action.onClicked.addListener(function(tab) {
-  chrome.tabs.captureVisibleTab(function(screenshotUrl) {
+  chrome.tabs.captureVisibleTab(null, { format: "png", quality: 100 }, function (image) {
     const date = new Date().toLocaleString();
     const filename = `Screenshot Report - ${date}.txt`;
     const metadata = {
