@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Screenshot Report</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    h1 {
+      font-size: 24px;
+      margin-top: 0;
+    }
+    p {
+      font-size: 14px;
+      margin: 10px 0;
+    }
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-bottom: 20px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 10px;
+    }
+    th {
+      font-weight: bold;
+      text-align: left;
+      background-color: #f2f2f2;
+    }
+  </style>
+</head>
+<body>
+  <h1>Screenshot Report</h1>
+  <p>Clique em um relatório para ver os detalhes:</p>
+  <table>
+    <thead>
+      <tr>
+        <th>Data e hora</th>
+        <th>Título da página</th>
+        <th>URL da página</th>
+        <th>Imagem do screenshot</th>
+        <th>Link para o arquivo</th>
+      </tr>
+    </thead>
+    <tbody id="report-list">
+    </tbody>
+  </table>
+  <script src="popup.js"></script>
+</body>
+</html>
