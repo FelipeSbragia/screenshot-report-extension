@@ -12,10 +12,7 @@
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
-      "16": "icons/icon16.png",
-	  "32": "icons/icon32.png",
-      "48": "icons/icon48.png",
-	  "128": "icons/icon128.png"
+      "48": "icons/icon48.png"
     }
   },
   "permissions": [
@@ -23,13 +20,18 @@
 	"tabs",
     "declarativeContent",
     "storage",
-    "scripting"
+    "scripting",
+    "contextMenus",
+    "downloads"
   ],
   "background": {
     "service_worker": "background.js"
   },
+  "host_permissions": ["<all_urls>"],
+  "web_accessible_resources": ["capture.js"],
   "content_security_policy": {
-    "extension_pages": "script-src 'self'; object-src 'self'"
+    "extension_pages": "script-src 'self'; object-src 'self'",
+    "sandbox": "sandbox allow-scripts"
   },
   "externally_connectable": {
 	"matches": ["*://*/*"]
