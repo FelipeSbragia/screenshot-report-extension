@@ -40,10 +40,17 @@ document.addEventListener('DOMContentLoaded', function() {
   chrome.storage.onChanged.addListener(getReports);
 });
 
-document.getElementById("capture").addEventListener("click", async () => {
-  const dataUrl = await captureScreen();
-  saveScreenshot(dataUrl);
-  generateReport();
+document.addEventListener("DOMContentLoaded", () => {
+  function initializePopup() {
+    const captureButton = document.getElementById("capture");
+    captureButton.addEventListener("click", async () => {
+	  const dataUrl = await captureScreen();
+	  saveScreenshot(dataUrl);
+	  generateReport();
+	});
+  }
+
+  initializePopup();
 });
 
 async function captureScreen() {
