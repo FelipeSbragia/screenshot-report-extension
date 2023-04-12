@@ -12,25 +12,64 @@ async function capturaTela() {
 async function getMetadata() {
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   const { title, url } = tab;
+
   const metadata = {
     title,
     url,
     metaTags: [],
+    creationDate: null,
+    modificationDate: null,
+    author: null,
+    keywords: null,
+    description: null,
+    fileSize: null,
+    fileType: null,
   };
 
   if (chrome.scripting && chrome.scripting.executeScript) {
-	  const metaTags = await chrome.scripting.executeScript({
-		target: { tabId: tab.id },
-		func: () => [...document.getElementsByTagName('meta')],
-	  });
+    const metaTags = await chrome.scripting.executeScript({
+      target: { tabId: tab.id },
+      func: () => [...document.getElementsByTagName('meta')],
+    });
 
-	  metadata.metaTags = metaTags.result.map(({ attributes }) =>
-		[...attributes].reduce((prev, curr) => ({ ...prev, [curr.name]: curr.value }), {})
-	  );
+    metadata.metaTags = metaTags.result.map(({ attributes }) =>
+      [...attributes].reduce((prev, curr) => ({ ...prev, [curr.name]: curr.value }), {})
+    );
+
+    const headers = await chrome.scripting.executeScript({
+      target: { tabId: tab.id },
+      func: () => [...document.querySelectorAll('head meta')],
+    });
+
+    headers.forEach(header => {
+      switch (header.getAttribute('name')?.toLowerCase()) {
+        case 'author':
+          metadata.author = header.getAttribute('content');
+          break;
+        case 'creation-date':
+          metadata.creationDate = header.getAttribute('content');
+          break;
+        case 'keywords':
+          metadata.keywords = header.getAttribute('content');
+          break;
+        case 'description':
+          metadata.description = header.getAttribute('content');
+          break;
+        case 'filetype':
+          metadata.fileType = header.getAttribute('content');
+          break;
+        case 'filesize':
+          metadata.fileSize = header.getAttribute('content');
+          break;
+        case 'last-modified':
+          metadata.modificationDate = header.getAttribute('content');
+          break;
+      }
+    });
   } else {
-	console.log('API de script do Chrome não está disponível');
+    console.log('API de script do Chrome não está disponível');
   }
-  
+
   return metadata;
 }
 
@@ -38,30 +77,56 @@ async function getMetadata() {
 function exibeRelatorio(metadata) {
   const container = document.getElementById('metadata');
   container.innerHTML = `
-    <h2>Metadados da página:</h2>
-    <div><strong>Título:</strong> ${metadata.title}</div>
-    <div><strong>URL:</strong> ${metadata.url}</div>
-    <h3>Meta Tags:</h3>
-    <table>
-      <thead>
+    <div class="metadata-table">
+      <h2>Metadados da página:</h2>
+      <table>
         <tr>
-          <th>Nome</th>
-          <th>Conteúdo</th>
+          <td>Título:</td>
+          <td>${metadata.title || '-'}</td>
         </tr>
-      </thead>
-      <tbody>
+        <tr>
+          <td>URL:</td>
+          <td>${metadata.url || '-'}</td>
+        </tr>
+        <tr>
+          <td colspan="2"><h3>Meta Tags:</h3></td>
+        </tr>
         ${metadata.metaTags
           .map(
-            (meta) => `
-            <tr>
-              <td>${meta.name || meta.property || '-'}</td>
-              <td>${meta.content || '-'}</td>
-            </tr>
-          `
+            (meta, index) => `
+              <tr style="background-color: ${index % 2 === 0 ? '#fff' : '#f1f1f1'};">
+                <td>${meta.name || meta.property || '-'}</td>
+                <td>${meta.content || '-'}</td>
+              </tr>
+            `
           )
           .join('')}
-      </tbody>
-    </table>
+        <tr>
+          <td>Data de criação ou modificação da página:</td>
+          <td>${metadata.lastModified || '-'}</td>
+        </tr>
+        <tr>
+          <td>Autor ou criador da página:</td>
+          <td>${metadata.author || '-'}</td>
+        </tr>
+        <tr>
+          <td>Palavras-chave da página:</td>
+          <td>${metadata.keywords || '-'}</td>
+        </tr>
+        <tr>
+          <td>Descrição da página:</td>
+          <td>${metadata.description || '-'}</td>
+        </tr>
+        <tr>
+          <td>Tamanho do arquivo da página:</td>
+          <td>${metadata.fileSize ? (metadata.fileSize / 1024).toFixed(2) + ' KB' : '-'}</td>
+        </tr>
+        <tr>
+          <td>Tipo de arquivo da página:</td>
+          <td>${metadata.fileType || '-'}</td>
+        </tr>
+      </table>
+    </div>
   `;
 }
 
