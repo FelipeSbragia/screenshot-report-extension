@@ -28,7 +28,6 @@
     "service_worker": "background.js"
   },
   "host_permissions": ["<all_urls>"],
-  "web_accessible_resources": ["capture.js"],
   "content_security_policy": {
     "extension_pages": "script-src 'self'; object-src 'self'",
     "sandbox": "sandbox allow-scripts"

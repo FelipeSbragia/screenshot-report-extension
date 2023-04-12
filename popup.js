@@ -44,10 +44,10 @@ document.addEventListener("DOMContentLoaded", () => {
   function initializePopup() {
     const captureButton = document.getElementById("capture");
     captureButton.addEventListener("click", async () => {
-	  const dataUrl = await captureScreen();
-	  saveScreenshot(dataUrl);
-	  generateReport();
-	});
+      const dataUrl = await captureScreen();
+      saveScreenshot(dataUrl);
+      generateReport();
+    });
   }
 
   initializePopup();
@@ -73,4 +73,18 @@ function generateReport() {
     date: new Date().toLocaleString()
   };
   chrome.runtime.sendMessage({ action: "generateReport", report });
+}
+
+captureButton.addEventListener("click", async () => {
+  console.log("Botão de captura clicado!");
+  const dataUrl = await captureScreen();
+  saveScreenshot(dataUrl);
+  generateReport();
+});
+
+async function captureScreen() {
+  const tab = await getCurrentTab();
+  const dataUrl = await html2canvas(tab);
+  console.log(dataUrl);
+  return dataUrl;
 }
