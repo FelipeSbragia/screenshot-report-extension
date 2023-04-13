@@ -9,7 +9,7 @@
     "48": "icons/screenshot-48.png",
     "128": "icons/screenshot-128.png"
   },
-  "permissions": ["activeTab", "tabs", "storage"],
+  "permissions": ["activeTab", "tabs", "storage", "scripting", "<all_urls>"],
   "host_permissions": ["<all_urls>"],
   "action": {
     "default_popup": "popup.html",

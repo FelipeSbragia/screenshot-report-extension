@@ -26,51 +26,48 @@ async function getMetadata() {
     fileType: null,
   };
 
-  if (chrome.scripting && chrome.scripting.executeScript) {
-    const metaTags = await chrome.scripting.executeScript({
-      target: { tabId: tab.id },
-      func: () => [...document.getElementsByTagName('meta')],
-    });
+	if (chrome.scripting && chrome.scripting.executeScript) {
+		const { metaTags = [] } = await chrome.scripting.executeScript({
+		  target: { tabId: tab.id },
+		  func: () => [...document.getElementsByTagName('meta')],
+		});
 
-    metadata.metaTags = metaTags.result.map(({ attributes }) =>
-      [...attributes].reduce((prev, curr) => ({ ...prev, [curr.name]: curr.value }), {})
-    );
+		metadata.metaTags = metaTags.map(({ attributes }) =>
+		  [...attributes].reduce((prev, { name, value }) => ({ ...prev, [name]: value }), {})
+		);
 
-    const headers = await chrome.scripting.executeScript({
-      target: { tabId: tab.id },
-      func: () => [...document.querySelectorAll('head meta')],
-    });
+		const { headers = [] } = await chrome.scripting.executeScript({
+		  target: { tabId: tab.id },
+		  func: () => [...document.querySelectorAll('head meta')],
+		});
 
-    headers.forEach(header => {
-      switch (header.getAttribute('name')?.toLowerCase()) {
-        case 'author':
-          metadata.author = header.getAttribute('content');
-          break;
-        case 'creation-date':
-          metadata.creationDate = header.getAttribute('content');
-          break;
-        case 'keywords':
-          metadata.keywords = header.getAttribute('content');
-          break;
-        case 'description':
-          metadata.description = header.getAttribute('content');
-          break;
-        case 'filetype':
-          metadata.fileType = header.getAttribute('content');
-          break;
-        case 'filesize':
-          metadata.fileSize = header.getAttribute('content');
-          break;
-        case 'last-modified':
-          metadata.modificationDate = header.getAttribute('content');
-          break;
-      }
-    });
-  } else {
-    console.log('API de script do Chrome não está disponível');
-  }
+console.log('metaTags:');
+console.log(metadata.metaTags);
+console.log('Headers:');
+console.log(headers);
 
-  return metadata;
+metaTags.forEach((tag) => {
+  const name = tag.getAttribute('name') || tag.getAttribute('property');
+  const value = tag.getAttribute('content');
+  metadata[name] = value;
+});
+
+console.log(metadata.description); // Exemplo de Headers em uma página HTML
+console.log(metadata.keywords); // HTML, Headers, Exemplo
+
+		if (headers) {
+			headers.forEach((header) => {
+				const name = header.getAttribute('name')?.toLowerCase();
+				if (metadata.hasOwnProperty(name)) {
+					metadata[name] = header.getAttribute('content');
+				}
+			});
+		}
+	} else {
+		console.log('API de script do Chrome não está disponível');
+	}
+
+	return metadata;
 }
 
 // Exibe os metadados em um relatório
